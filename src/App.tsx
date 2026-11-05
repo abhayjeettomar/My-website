@@ -2,14 +2,14 @@ import React, { useEffect, useState } from 'react';
 import Lenis from 'lenis';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { Preloader } from './components/Preloader';
+import { PhotoReelPreloader } from './components/PhotoReelPreloader';
 import { CustomCursor } from './components/CustomCursor';
 import { NavbarMinimal } from './components/NavbarMinimal';
-import { HeroPinnedStage } from './components/HeroPinnedStage';
-import { PinnedApertureBreakdown } from './components/PinnedApertureBreakdown';
-import { HorizontalHardwareTrack } from './components/HorizontalHardwareTrack';
-import { AirborneSequenceSection } from './components/AirborneSequenceSection';
-import { StickyEditionsStack } from './components/StickyEditionsStack';
+import { PortalHeroStage } from './components/PortalHeroStage';
+import { WebGLDisplacementStage } from './components/WebGLDisplacementStage';
+import { XRayHardwareLoupe } from './components/XRayHardwareLoupe';
+import { VelocityHardwareRibbon } from './components/VelocityHardwareRibbon';
+import { ZAxisVariantsTunnel } from './components/ZAxisVariantsTunnel';
 import { SupersonicCockpitSection } from './components/SupersonicCockpitSection';
 import { ReserveDrawerModal } from './components/ReserveDrawerModal';
 import { FooterParallax } from './components/FooterParallax';
@@ -19,14 +19,14 @@ gsap.registerPlugin(ScrollTrigger);
 export function App() {
   const [preloaderDone, setPreloaderDone] = useState(false);
   const [reserveModalOpen, setReserveModalOpen] = useState(false);
-  const [selectedVariant, setSelectedVariant] = useState('Roadster Thrust');
+  const [selectedVariant, setSelectedVariant] = useState('Roadster Rocket');
 
   useEffect(() => {
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (reduceMotion) return;
 
     const lenis = new Lenis({
-      lerp: 0.075,
+      lerp: 0.08,
       smoothWheel: true,
       wheelMultiplier: 0.9,
     });
@@ -52,38 +52,40 @@ export function App() {
 
   useEffect(() => {
     if (preloaderDone) {
-      setTimeout(() => ScrollTrigger.refresh(), 100);
+      setTimeout(() => ScrollTrigger.refresh(), 80);
     }
   }, [preloaderDone]);
 
   return (
-    <div className="min-h-screen bg-[#060608] text-[#F5F5F7] film-grain">
-      {!preloaderDone && <Preloader onComplete={() => setPreloaderDone(true)} />}
+    <div className="min-h-screen bg-[#050507] text-[#F5F5F7]">
+      {!preloaderDone && (
+        <PhotoReelPreloader onComplete={() => setPreloaderDone(true)} />
+      )}
       <CustomCursor />
       <NavbarMinimal onOpenReserve={() => setReserveModalOpen(true)} />
 
       <main>
-        {/* 01: Pinned Split-Frame Hero & Scroll-Scrubbed 3D Video Unveil */}
-        <HeroPinnedStage onOpenReserve={() => setReserveModalOpen(true)} />
+        {/* 01: Shared-Element Hero + SVG "0.59s" Knockout Portal Zoom-Through */}
+        <PortalHeroStage onOpenReserve={() => setReserveModalOpen(true)} />
 
-        {/* 02: Pinned Expanding Clip-Path Window & 3-Chapter Photographic Crossfade */}
-        <PinnedApertureBreakdown />
+        {/* 02: 120FPS Native WebGL GLSL Directional Wind-Displacement & RGB-Split Image Morph */}
+        <WebGLDisplacementStage />
 
-        {/* 03: Pinned 500vw Horizontal Hardware Inspection Track (6 Real Photo Plates) */}
-        <HorizontalHardwareTrack />
+        {/* 03: Interactive Sub-Surface X-Ray Mechanical Scanner Loupe */}
+        <XRayHardwareLoupe />
 
-        {/* 04: "Feat of Strength: Complete" 4-Stage Airborne & Wall-Adhesion Sequence */}
-        <AirborneSequenceSection />
+        {/* 04: Velocity-Bent 35mm Horizontal Hardware Ribbon */}
+        <VelocityHardwareRibbon />
 
-        {/* 05: Sticky Receding 3D Card Stack (Performance, Thrust 0.85s, Rocket 0.59s) */}
-        <StickyEditionsStack
+        {/* 05: Continuous 3D Z-Axis Camera Flight Tunnel (Performance -> Thrust -> Rocket) */}
+        <ZAxisVariantsTunnel
           onSelectVariantAndReserve={(variantName) => {
             setSelectedVariant(variantName);
             setReserveModalOpen(true);
           }}
         />
 
-        {/* 06: Supersonic Cockpit Photograph with Clip-Path Unveil & Interactive Hotspots */}
+        {/* 06: Supersonic Cockpit Real Photograph + Interactive Hotspots */}
         <SupersonicCockpitSection />
       </main>
 

@@ -14,7 +14,7 @@ export const ReserveDrawerModal: React.FC<ReserveDrawerModalProps> = ({
   onClose,
 }) => {
   const [selectedVariant, setSelectedVariant] = useState(
-    initialVariant || 'Roadster Thrust'
+    initialVariant || 'Roadster Rocket'
   );
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -27,7 +27,7 @@ export const ReserveDrawerModal: React.FC<ReserveDrawerModalProps> = ({
       data-lenis-prevent
       className="fixed inset-0 z-[95] bg-black/85 backdrop-blur-xl flex justify-end"
     >
-      <div className="w-full max-w-xl bg-[#090A0E] border-l border-white/15 h-full p-8 sm:p-12 flex flex-col justify-between overflow-y-auto">
+      <div className="w-full max-w-xl bg-[#08090D] border-l border-white/15 h-full p-8 sm:p-12 flex flex-col justify-between overflow-y-auto">
         <div className="flex items-center justify-between border-b border-white/10 pb-6">
           <span className="font-mono text-[10px] uppercase tracking-[0.24em] text-[#D4AF37]">
             TESLA ROADSTER // ALLOCATION REQUEST
@@ -78,7 +78,7 @@ export const ReserveDrawerModal: React.FC<ReserveDrawerModalProps> = ({
                   type="button"
                   key={v.id}
                   onClick={() => setSelectedVariant(v.name)}
-                  className={`w-full text-left p-4 rounded-2xl border transition-all flex items-center justify-between ${
+                  className={`w-full text-left p-4 rounded-2xl border transition-colors flex items-center justify-between ${
                     selectedVariant === v.name
                       ? 'border-[#D4AF37] bg-[#D4AF37]/10 text-white'
                       : 'border-white/10 bg-white/[0.02] text-white/65 hover:text-white'
@@ -116,7 +116,7 @@ export const ReserveDrawerModal: React.FC<ReserveDrawerModalProps> = ({
 
             <button
               type="submit"
-              className="w-full py-4 rounded-full bg-[#F5F5F7] text-[#060608] hover:bg-[#D4AF37] font-mono text-[10px] uppercase tracking-[0.22em] font-semibold transition-colors"
+              className="w-full py-4 rounded-full bg-[#F5F5F7] text-[#050507] hover:bg-[#D4AF37] font-mono text-[10px] uppercase tracking-[0.22em] font-semibold transition-colors"
             >
               Request {selectedVariant} Allocation
             </button>
@@ -130,4 +130,3 @@ export const ReserveDrawerModal: React.FC<ReserveDrawerModalProps> = ({
     </div>
   );
 };
-

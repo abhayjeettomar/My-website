@@ -9,8 +9,8 @@ export const FooterParallax: React.FC<FooterParallaxProps> = ({
   onOpenReserve,
 }) => {
   return (
-    <footer className="relative min-h-[85vh] w-full overflow-hidden bg-[#060608] border-t border-white/10 flex flex-col justify-between p-6 sm:p-12">
-      <div className="absolute inset-0 z-0">
+    <footer className="relative min-h-[85vh] w-full overflow-hidden bg-[#050507] flex flex-col justify-between p-6 sm:p-12">
+      <div className="absolute inset-0 z-0 gpu-layer">
         <img
           src={ROADSTER_REAL_PHOTOS.officialRearHero}
           alt="Tesla Roadster Finale"
@@ -20,7 +20,7 @@ export const FooterParallax: React.FC<FooterParallaxProps> = ({
           className="absolute inset-0"
           style={{
             background:
-              'linear-gradient(to bottom, #060608 0%, rgba(6,6,8,0.4) 50%, #060608 100%)',
+              'linear-gradient(to bottom, #050507 0%, rgba(5,5,7,0.4) 50%, #050507 100%)',
           }}
         />
       </div>
@@ -43,7 +43,7 @@ export const FooterParallax: React.FC<FooterParallaxProps> = ({
           <button
             onClick={onOpenReserve}
             data-cursor-label="RESERVE"
-            className="bg-[#F5F5F7] text-[#060608] hover:bg-[#D4AF37] font-mono text-[10px] uppercase tracking-[0.22em] font-semibold px-8 py-4 rounded-full transition-colors"
+            className="bg-[#F5F5F7] text-[#050507] hover:bg-[#D4AF37] font-mono text-[10px] uppercase tracking-[0.22em] font-semibold px-8 py-4 rounded-full transition-colors"
           >
             Reserve Roadster
           </button>
@@ -63,4 +63,3 @@ export const FooterParallax: React.FC<FooterParallaxProps> = ({
     </footer>
   );
 };
-

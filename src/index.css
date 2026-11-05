@@ -3,8 +3,8 @@
 @tailwind utilities;
 
 :root {
-  --bg-void: #060608;
-  --bg-surface: #0C0D11;
+  --bg-void: #050507;
+  --bg-surface: #0B0C10;
   --ano-white: #F5F5F7;
   --visor-gold: #D4AF37;
   --tesla-red: #E82127;
@@ -20,52 +20,41 @@
   box-sizing: border-box;
 }
 
-/* CRITICAL FOR LENIS: html scroll-behavior MUST be auto, never smooth */
+/* CRITICAL FOR 120FPS LENIS: never set scroll-behavior: smooth on html */
 html {
   scroll-behavior: auto !important;
-  background-color: #060608;
+  background-color: #050507;
   color: #F5F5F7;
-}
-
-html.lenis,
-html.lenis body {
-  height: auto;
-}
-
-.lenis.lenis-smooth {
-  scroll-behavior: auto !important;
-}
-
-.lenis.lenis-smooth [data-lenis-prevent] {
-  overscroll-behavior: contain;
-}
-
-.lenis.lenis-stopped {
-  overflow: hidden;
 }
 
 body {
   font-family: var(--font-sans);
-  background-color: #060608;
+  background-color: #050507;
   color: #F5F5F7;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
 }
 
-/* ==========================================================================
-   MOTIONSITES .liquid-glass REFRACTIVE SURFACE SHADER
-   ========================================================================== */
+/* GPU Compositor Hardware Acceleration Utility */
+.gpu-layer {
+  will-change: transform, opacity;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+/* Refractive Liquid Glass (Used only on small floating HUD pills — zero full-screen blur lag) */
 .liquid-glass {
   background: linear-gradient(
     165deg,
-    rgba(255, 255, 255, 0.04) 0%,
-    rgba(255, 255, 255, 0.012) 45%,
+    rgba(255, 255, 255, 0.045) 0%,
+    rgba(255, 255, 255, 0.012) 50%,
     rgba(255, 255, 255, 0.004) 100%
   );
-  backdrop-filter: blur(20px) saturate(1.4) brightness(1.04);
-  -webkit-backdrop-filter: blur(20px) saturate(1.4) brightness(1.04);
-  box-shadow: inset 0 0 14px rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(16px) saturate(1.35);
+  -webkit-backdrop-filter: blur(16px) saturate(1.35);
+  box-shadow: inset 0 0 12px rgba(255, 255, 255, 0.12);
   position: relative;
   overflow: hidden;
 }
@@ -78,10 +67,9 @@ body {
   padding: 1px;
   background: linear-gradient(
     180deg,
-    rgba(255, 255, 255, 0.22) 0%,
-    rgba(255, 255, 255, 0.04) 25%,
-    rgba(255, 255, 255, 0.01) 50%,
-    rgba(212, 175, 55, 0.14) 85%,
+    rgba(255, 255, 255, 0.24) 0%,
+    rgba(255, 255, 255, 0.03) 40%,
+    rgba(212, 175, 55, 0.18) 85%,
     rgba(255, 255, 255, 0.16) 100%
   );
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
@@ -90,40 +78,19 @@ body {
   pointer-events: none;
 }
 
-/* Gold-Glazed Spacesuit Visor Glass Panel */
+/* Gold-Glazed Spacesuit Visor Accent Card */
 .gold-visor-glass {
   background: linear-gradient(
     160deg,
-    rgba(212, 175, 55, 0.08) 0%,
-    rgba(10, 10, 14, 0.78) 60%,
-    rgba(212, 175, 55, 0.03) 100%
+    rgba(212, 175, 55, 0.09) 0%,
+    rgba(9, 10, 14, 0.84) 65%,
+    rgba(212, 175, 55, 0.04) 100%
   );
-  backdrop-filter: blur(24px) saturate(1.5);
-  -webkit-backdrop-filter: blur(24px) saturate(1.5);
-  box-shadow: inset 0 0 18px rgba(212, 175, 55, 0.12);
-  position: relative;
-  overflow: hidden;
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid rgba(212, 175, 55, 0.28);
 }
 
-.gold-visor-glass::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  padding: 1px;
-  background: linear-gradient(
-    180deg,
-    rgba(212, 175, 55, 0.42) 0%,
-    rgba(255, 255, 255, 0.05) 50%,
-    rgba(212, 175, 55, 0.24) 100%
-  );
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-  pointer-events: none;
-}
-
-/* Editorial Italic Serif Display Word */
 .serif-gold-italic {
   font-family: var(--font-serif);
   font-style: italic;
@@ -131,35 +98,14 @@ body {
   color: #F3E5AB;
 }
 
-/* Masked Word & Line Reveal Wrappers */
-.split-word-mask,
-.split-line-mask {
-  display: inline-block;
-  overflow: hidden;
-  vertical-align: bottom;
-  padding-bottom: 0.06em;
-}
-
-.split-word,
-.split-line {
-  display: inline-block;
-  will-change: transform, opacity, filter;
-}
-
-/* Subtle Film Grain Overlay */
-.film-grain {
-  background-image: radial-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 0);
-  background-size: 24px 24px;
-}
-
 ::-webkit-scrollbar {
   width: 4px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #060608;
+  background: #050507;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(212, 175, 55, 0.35);
+  background: rgba(212, 175, 55, 0.4);
 }
