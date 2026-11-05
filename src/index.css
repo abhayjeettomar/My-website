@@ -1,0 +1,197 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg-obsidian: #0A061A;
+  --bg-void: #05030D;
+  --accent-purple: #A855F7;
+  --accent-indigo: #6366F1;
+  --font-helvetica-light: 'Helvetica Neue Light', 'Helvetica Neue', 'Inter', Helvetica, Arial, sans-serif;
+  --font-display: 'HelveticaNowDisplay-Medium', 'Inter', system-ui, sans-serif;
+  --font-serif-italic: 'Instrument Serif', Georgia, serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --font-heading: 'HelveticaNowDisplay-Medium', 'Helvetica Neue', Arial, sans-serif;
+  --font-body: 'HelveticaNowDisplayW01-Rg', 'Helvetica Neue', Arial, sans-serif;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  background-color: #0A061A;
+  color: #ffffff;
+}
+
+body {
+  font-family: var(--font-helvetica-light);
+  background-color: #0A061A;
+  color: #ffffff;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+::selection {
+  background: rgba(168, 85, 247, 0.4);
+  color: #ffffff;
+}
+
+/* ==========================================================================
+   OFFICIAL MOTIONSITES .liquid-glass REFRACTIVE SURFACE RECIPE
+   ========================================================================== */
+.liquid-glass {
+  background: linear-gradient(
+    165deg,
+    rgba(255, 255, 255, 0.035) 0%,
+    rgba(255, 255, 255, 0.012) 40%,
+    rgba(255, 255, 255, 0.004) 100%
+  );
+  backdrop-filter: blur(18px) saturate(1.4) brightness(1.05);
+  -webkit-backdrop-filter: blur(18px) saturate(1.4) brightness(1.05);
+  border: none;
+  box-shadow: inset 0 0 12px rgba(255, 255, 255, 0.15);
+  position: relative;
+  overflow: hidden;
+}
+
+.liquid-glass::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1.5px;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.16) 0%,
+    rgba(255, 255, 255, 0.04) 15%,
+    rgba(255, 255, 255, 0.008) 40%,
+    rgba(255, 255, 255, 0.008) 60%,
+    rgba(255, 255, 255, 0.04) 85%,
+    rgba(255, 255, 255, 0.11) 100%
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+.liquid-glass::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(255, 255, 255, 0.04) 0%, transparent 50%),
+    radial-gradient(ellipse at center, transparent 55%, rgba(255, 255, 255, 0.008) 80%, rgba(255, 255, 255, 0.025) 100%);
+  pointer-events: none;
+}
+
+/* Stronger glass variant for floating navbar & modals */
+.liquid-glass-strong {
+  background: linear-gradient(
+    165deg,
+    rgba(18, 12, 36, 0.78) 0%,
+    rgba(10, 6, 26, 0.88) 100%
+  );
+  backdrop-filter: blur(24px) saturate(1.6) brightness(1.08);
+  -webkit-backdrop-filter: blur(24px) saturate(1.6) brightness(1.08);
+  box-shadow:
+    inset 0 0 16px rgba(255, 255, 255, 0.12),
+    0 24px 60px -12px rgba(0, 0, 0, 0.75);
+  position: relative;
+}
+
+.liquid-glass-strong::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.22) 0%,
+    rgba(168, 85, 247, 0.12) 50%,
+    rgba(255, 255, 255, 0.14) 100%
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+/* Cursor-tracking spotlight card overlay */
+.spotlight-card {
+  position: relative;
+}
+
+.spotlight-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    480px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+    rgba(168, 85, 247, 0.18),
+    transparent 45%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.spotlight-card:hover::before {
+  opacity: 1;
+}
+
+/* Typewriter cursor blink from Mainframe tutorial */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.animate-cursor-blink {
+  animation: blink 1s step-end infinite;
+}
+
+/* Subtle kinetic shimmer for "Superpowers" serif display word */
+@keyframes text-shimmer {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.shimmer-superpowers {
+  font-family: var(--font-serif-italic);
+  font-style: italic;
+  background: linear-gradient(90deg, #ffffff 0%, #e9d5ff 30%, #a855f7 55%, #6366f1 75%, #ffffff 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: text-shimmer 6s ease infinite;
+}
+
+/* Custom sleek scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #05030D;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.16);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(168, 85, 247, 0.5);
+}
+
