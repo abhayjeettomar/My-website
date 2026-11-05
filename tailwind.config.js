@@ -5,23 +5,15 @@ export default {
   theme: {
     extend: {
       colors: {
-        obsidian: '#0A061A',
-        void: '#05030D',
-        accent: {
-          purple: '#A855F7',
-          indigo: '#6366F1',
-        },
+        void: '#050508',
+        titanium: '#0B0D13',
+        crimson: '#E82127',
+        'visor-gold': '#D4AF37',
+        'thruster-cyan': '#38BDF8',
       },
       fontFamily: {
-        sans: [
-          'Helvetica Neue Light',
-          'Helvetica Neue',
-          'Inter',
-          'Helvetica',
-          'Arial',
-          'sans-serif',
-        ],
-        display: ['HelveticaNowDisplay-Medium', 'Inter', 'system-ui', 'sans-serif'],
+        light: ['Helvetica Neue Light', 'Helvetica Neue', 'Inter', 'sans-serif'],
+        display: ['HelveticaNowDisplay-Medium', 'Inter', 'sans-serif'],
         serif: ['Instrument Serif', 'Georgia', 'serif'],
         mono: ['JetBrains Mono', 'monospace'],
       },
@@ -29,4 +21,3 @@ export default {
   },
   plugins: [],
 };
-

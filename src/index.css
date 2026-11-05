@@ -3,16 +3,15 @@
 @tailwind utilities;
 
 :root {
-  --bg-obsidian: #0A061A;
-  --bg-void: #05030D;
-  --accent-purple: #A855F7;
-  --accent-indigo: #6366F1;
-  --font-helvetica-light: 'Helvetica Neue Light', 'Helvetica Neue', 'Inter', Helvetica, Arial, sans-serif;
-  --font-display: 'HelveticaNowDisplay-Medium', 'Inter', system-ui, sans-serif;
-  --font-serif-italic: 'Instrument Serif', Georgia, serif;
+  --bg-void: #050508;
+  --bg-titanium: #0B0D13;
+  --tesla-crimson: #E82127;
+  --visor-gold: #D4AF37;
+  --thruster-cyan: #38BDF8;
+  --font-light: 'Helvetica Neue Light', 'Helvetica Neue', 'Inter', sans-serif;
+  --font-display: 'HelveticaNowDisplay-Medium', 'Inter', sans-serif;
+  --font-serif: 'Instrument Serif', Georgia, serif;
   --font-mono: 'JetBrains Mono', monospace;
-  --font-heading: 'HelveticaNowDisplay-Medium', 'Helvetica Neue', Arial, sans-serif;
-  --font-body: 'HelveticaNowDisplayW01-Rg', 'Helvetica Neue', Arial, sans-serif;
 }
 
 * {
@@ -23,13 +22,13 @@
 
 html {
   scroll-behavior: smooth;
-  background-color: #0A061A;
+  background-color: #050508;
   color: #ffffff;
 }
 
 body {
-  font-family: var(--font-helvetica-light);
-  background-color: #0A061A;
+  font-family: var(--font-light);
+  background-color: #050508;
   color: #ffffff;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -37,12 +36,12 @@ body {
 }
 
 ::selection {
-  background: rgba(168, 85, 247, 0.4);
+  background: rgba(232, 33, 39, 0.45);
   color: #ffffff;
 }
 
 /* ==========================================================================
-   OFFICIAL MOTIONSITES .liquid-glass REFRACTIVE SURFACE RECIPE
+   1. OFFICIAL MOTIONSITES .liquid-glass REFRACTIVE SURFACE SHADER
    ========================================================================== */
 .liquid-glass {
   background: linear-gradient(
@@ -54,7 +53,7 @@ body {
   backdrop-filter: blur(18px) saturate(1.4) brightness(1.05);
   -webkit-backdrop-filter: blur(18px) saturate(1.4) brightness(1.05);
   border: none;
-  box-shadow: inset 0 0 12px rgba(255, 255, 255, 0.15);
+  box-shadow: inset 0 0 12px rgba(255, 255, 255, 0.14);
   position: relative;
   overflow: hidden;
 }
@@ -67,12 +66,12 @@ body {
   padding: 1.5px;
   background: linear-gradient(
     180deg,
-    rgba(255, 255, 255, 0.16) 0%,
+    rgba(255, 255, 255, 0.18) 0%,
     rgba(255, 255, 255, 0.04) 15%,
     rgba(255, 255, 255, 0.008) 40%,
     rgba(255, 255, 255, 0.008) 60%,
     rgba(255, 255, 255, 0.04) 85%,
-    rgba(255, 255, 255, 0.11) 100%
+    rgba(255, 255, 255, 0.12) 100%
   );
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
@@ -86,37 +85,42 @@ body {
   inset: 0;
   border-radius: inherit;
   background:
-    radial-gradient(ellipse at 50% 0%, rgba(255, 255, 255, 0.04) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 0%, rgba(255, 255, 255, 0.045) 0%, transparent 50%),
     radial-gradient(ellipse at center, transparent 55%, rgba(255, 255, 255, 0.008) 80%, rgba(255, 255, 255, 0.025) 100%);
   pointer-events: none;
 }
 
-/* Stronger glass variant for floating navbar & modals */
-.liquid-glass-strong {
+/* ==========================================================================
+   2. GOLD-GLAZED SPACESUIT VISOR GLASS (COPPER-GOLD RADIANCE)
+   ========================================================================== */
+.gold-glazed-glass {
   background: linear-gradient(
     165deg,
-    rgba(18, 12, 36, 0.78) 0%,
-    rgba(10, 6, 26, 0.88) 100%
+    rgba(212, 175, 55, 0.09) 0%,
+    rgba(15, 12, 8, 0.72) 55%,
+    rgba(232, 33, 39, 0.05) 100%
   );
-  backdrop-filter: blur(24px) saturate(1.6) brightness(1.08);
-  -webkit-backdrop-filter: blur(24px) saturate(1.6) brightness(1.08);
+  backdrop-filter: blur(22px) saturate(1.55) brightness(1.06);
+  -webkit-backdrop-filter: blur(22px) saturate(1.55) brightness(1.06);
   box-shadow:
-    inset 0 0 16px rgba(255, 255, 255, 0.12),
-    0 24px 60px -12px rgba(0, 0, 0, 0.75);
+    inset 0 0 18px rgba(212, 175, 55, 0.16),
+    0 24px 60px -12px rgba(0, 0, 0, 0.85);
   position: relative;
+  overflow: hidden;
 }
 
-.liquid-glass-strong::before {
+.gold-glazed-glass::before {
   content: '';
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  padding: 1px;
+  padding: 1.5px;
   background: linear-gradient(
     180deg,
-    rgba(255, 255, 255, 0.22) 0%,
-    rgba(168, 85, 247, 0.12) 50%,
-    rgba(255, 255, 255, 0.14) 100%
+    rgba(245, 158, 11, 0.38) 0%,
+    rgba(255, 255, 255, 0.06) 35%,
+    rgba(232, 33, 39, 0.18) 80%,
+    rgba(245, 158, 11, 0.28) 100%
   );
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
@@ -124,7 +128,9 @@ body {
   pointer-events: none;
 }
 
-/* Cursor-tracking spotlight card overlay */
+/* ==========================================================================
+   3. CURSOR-TRACKING RADIAL SPOTLIGHT CARD
+   ========================================================================== */
 .spotlight-card {
   position: relative;
 }
@@ -135,9 +141,10 @@ body {
   inset: 0;
   border-radius: inherit;
   background: radial-gradient(
-    480px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
-    rgba(168, 85, 247, 0.18),
-    transparent 45%
+    500px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+    rgba(232, 33, 39, 0.16),
+    rgba(212, 175, 55, 0.08) 35%,
+    transparent 60%
   );
   opacity: 0;
   transition: opacity 0.3s ease;
@@ -149,7 +156,25 @@ body {
   opacity: 1;
 }
 
-/* Typewriter cursor blink from Mainframe tutorial */
+/* ==========================================================================
+   4. GOLD-GLAZED & AFTERBURNER KINETIC SERIF ACCENTS
+   ========================================================================== */
+@keyframes shimmer-Sweep {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.gold-glazed-serif {
+  font-family: var(--font-serif);
+  font-style: italic;
+  background: linear-gradient(90deg, #ffffff 0%, #fde68a 28%, #f59e0b 52%, #ef4444 76%, #ffffff 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer-Sweep 6s ease infinite;
+}
+
 @keyframes blink {
   0%, 100% { opacity: 1; }
   50% { opacity: 0; }
@@ -159,21 +184,12 @@ body {
   animation: blink 1s step-end infinite;
 }
 
-/* Subtle kinetic shimmer for "Superpowers" serif display word */
-@keyframes text-shimmer {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-
-.shimmer-superpowers {
-  font-family: var(--font-serif-italic);
-  font-style: italic;
-  background: linear-gradient(90deg, #ffffff 0%, #e9d5ff 30%, #a855f7 55%, #6366f1 75%, #ffffff 100%);
-  background-size: 200% auto;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  animation: text-shimmer 6s ease infinite;
+/* Subtle aerospace grid background overlay */
+.aerospace-grid {
+  background-size: 48px 48px;
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
 }
 
 /* Custom sleek scrollbars */
@@ -183,15 +199,14 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: #05030D;
+  background: #050508;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.18);
   border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(168, 85, 247, 0.5);
+  background: rgba(232, 33, 39, 0.65);
 }
-
