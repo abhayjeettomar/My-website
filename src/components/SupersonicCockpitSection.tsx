@@ -1,135 +1,189 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { ROADSTER_REAL_PHOTOS } from '../data/roadsterAssets';
+
+gsap.registerPlugin(ScrollTrigger);
+
+const COCKPIT_HOTSPOTS = [
+  {
+    id: 'yoke',
+    code: '01 // STEER-BY-WIRE YOKE',
+    title: 'Variable-Ratio Digital Yoke & Movable Column',
+    detail:
+      'Seats are fixed directly to the carbon tub for mass control; the steer-by-wire yoke and digital brake/accelerator pedal box move to fit the pilot.',
+    x: '32%',
+    y: '58%',
+  },
+  {
+    id: 'center-screen',
+    code: '02 // SUPERSONIC CENTER DISPLAY',
+    title: 'Bespoke Telemetry & Thrust Allocation Console',
+    detail:
+      'Central portrait screen manages underbody suction fan modes, active wing deployment, and COPV nitrogen pressure telemetry.',
+    x: '53%',
+    y: '54%',
+  },
+  {
+    id: 'windscreen-strip',
+    code: '03 // SCUTTLE DISPLAY STRIP',
+    title: 'Base-of-Windscreen Dual Forward Pilot Readout',
+    detail:
+      'A recessed display strip along the base of the deep gold-glazed windscreen projects critical speed, G-load, and attitude cues directly in the pilot’s line of sight.',
+    x: '46%',
+    y: '34%',
+  },
+  {
+    id: 'microsuede',
+    code: '04 // ULTRAWHITE & GRAY MICROSUEDE',
+    title: 'High-G Microsuede Bolsters & Manual Backrest',
+    detail:
+      'Iconic Ultrawhite trim accented with high-grip gray microsuede bolsters holds the pilot securely during sub-second 4.6G launches.',
+    x: '72%',
+    y: '68%',
+  },
+];
 
 export const SupersonicCockpitSection: React.FC = () => {
-  const [yokeAngleDeg, setYokeAngleDeg] = useState<number>(0);
-  const [trimMode, setTrimMode] = useState<'ultrawhite' | 'carbon'>('ultrawhite');
+  const sectionRef = useRef<HTMLElement | null>(null);
+  const figureRef = useRef<HTMLElement | null>(null);
+  const [activeSpot, setActiveSpot] = useState(COCKPIT_HOTSPOTS[0]);
 
-  // Steer-by-wire dynamic ratio calculation
-  const wheelTurnDeg = (yokeAngleDeg * 0.42).toFixed(1);
+  useEffect(() => {
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduceMotion || !figureRef.current) return;
+
+    const ctx = gsap.context(() => {
+      const img = figureRef.current?.querySelector('img');
+      gsap.fromTo(
+        figureRef.current,
+        { clipPath: 'inset(12% 8% 12% 8% round 24px)' },
+        {
+          clipPath: 'inset(0% 0% 0% 0% round 16px)',
+          ease: 'none',
+          scrollTrigger: {
+            trigger: figureRef.current,
+            start: 'top 85%',
+            end: 'top 20%',
+            scrub: 1,
+          },
+        }
+      );
+
+      if (img) {
+        gsap.fromTo(
+          img,
+          { scale: 1.14 },
+          {
+            scale: 1.0,
+            ease: 'none',
+            scrollTrigger: {
+              trigger: figureRef.current,
+              start: 'top bottom',
+              end: 'bottom top',
+              scrub: 1.2,
+            },
+          }
+        );
+      }
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
 
   return (
-    <section id="cockpit" className="py-24 px-5 sm:px-8 md:px-12 max-w-7xl mx-auto">
-      <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
-        <div>
-          <span className="font-mono text-xs uppercase tracking-[0.2em] text-amber-300 block mb-3">
-            06 // SUPERSONIC COCKPIT &amp; STEER-BY-WIRE YOKE
+    <section
+      id="cockpit"
+      ref={sectionRef}
+      className="py-28 px-5 sm:px-12 max-w-[1600px] mx-auto border-t border-white/10"
+    >
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-end mb-14">
+        <div className="lg:col-span-7">
+          <span className="font-mono text-[10px] uppercase tracking-[0.24em] text-[#D4AF37] block mb-3">
+            06 // SUPERSONIC INTERIOR ARCHITECTURE
           </span>
-          <h2 className="text-4xl sm:text-6xl font-light tracking-tight text-white">
-            Ultrawhite &amp; Microsuede. <span className="gold-glazed-serif">Steer-by-Wire.</span>
+          <h2 className="text-5xl sm:text-7xl font-light tracking-[-0.035em] text-white leading-[0.95]">
+            Built around <span className="serif-gold-italic">the pilot.</span>
           </h2>
         </div>
-
-        <div className="flex items-center gap-2">
-          <button
-            onClick={() => setTrimMode('ultrawhite')}
-            className={`px-4 py-2 rounded-full text-xs font-mono transition-all cursor-pointer ${
-              trimMode === 'ultrawhite'
-                ? 'bg-white text-black font-semibold shadow'
-                : 'liquid-glass text-white/70'
-            }`}
-          >
-            Ultrawhite + Gray Microsuede
-          </button>
-          <button
-            onClick={() => setTrimMode('carbon')}
-            className={`px-4 py-2 rounded-full text-xs font-mono transition-all cursor-pointer ${
-              trimMode === 'carbon'
-                ? 'bg-white text-black font-semibold shadow'
-                : 'liquid-glass text-white/70'
-            }`}
-          >
-            Track Exposed Carbon
-          </button>
-        </div>
-      </div>
-
-      {/* Interactive Triple-Display + Steer-by-Wire Yoke Cockpit Stage */}
-      <div
-        className={`rounded-3xl p-6 sm:p-10 border transition-colors duration-500 ${
-          trimMode === 'ultrawhite'
-            ? 'bg-gradient-to-b from-slate-100/15 via-[#0E1118] to-[#050508] border-white/25 shadow-2xl'
-            : 'liquid-glass border-white/15'
-        }`}
-      >
-        {/* Top Row: Two Forward Pilot Displays + Center Touchscreen */}
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-4 mb-8">
-          {/* Left Forward Display: COPV & Suction Pressure */}
-          <div className="md:col-span-3 bg-black/75 border border-white/15 rounded-2xl p-4 font-mono">
-            <span className="text-[10px] text-white/45 block">LEFT FORWARD DISPLAY</span>
-            <div className="text-lg text-sky-300 font-semibold mt-1">COPV: 690 BAR</div>
-            <div className="text-xs text-white/65 mt-1">SUCTION SEAL: -24.8 kPa</div>
-            <div className="text-[11px] text-emerald-400 mt-2">STEER-BY-WIRE: ARMED</div>
-          </div>
-
-          {/* Center Primary Telemetry Touchscreen */}
-          <div className="md:col-span-6 bg-black/85 border border-amber-400/30 rounded-2xl p-5 flex items-center justify-between font-mono">
-            <div>
-              <span className="text-[10px] text-amber-300 block">
-                CENTER SUPERSONIC TOUCHSCREEN
-              </span>
-              <div className="text-2xl sm:text-3xl text-white font-semibold mt-1">
-                YOKE {yokeAngleDeg > 0 ? `+${yokeAngleDeg}°` : `${yokeAngleDeg}°`}
-              </div>
-              <div className="text-xs text-white/55 mt-1">
-                FRONT AXLE VECTOR: {wheelTurnDeg}° · RATIO 5.2:1
-              </div>
-            </div>
-
-            {/* Interactive SVG Steer-by-Wire Yoke */}
-            <div className="w-36 h-24 flex items-center justify-center">
-              <svg
-                viewBox="0 0 160 100"
-                style={{ transform: `rotate(${yokeAngleDeg}deg)` }}
-                className="w-full h-full transition-transform duration-150"
-              >
-                <path
-                  d="M 20,25 L 20,70 Q 20,85 40,85 L 120,85 Q 140,85 140,70 L 140,25"
-                  fill="none"
-                  stroke={trimMode === 'ultrawhite' ? '#F8FAFC' : '#E82127'}
-                  strokeWidth="10"
-                  strokeLinecap="round"
-                />
-                <line x1="25" y1="55" x2="135" y2="55" stroke="#94A3B8" strokeWidth="6" />
-                <circle
-                  cx="80"
-                  cy="55"
-                  r="12"
-                  fill="#0F172A"
-                  stroke="#F59E0B"
-                  strokeWidth="2"
-                />
-              </svg>
-            </div>
-          </div>
-
-          {/* Right Forward Display: G-Meter & Track Mode */}
-          <div className="md:col-span-3 bg-black/75 border border-white/15 rounded-2xl p-4 font-mono">
-            <span className="text-[10px] text-white/45 block">RIGHT FORWARD DISPLAY</span>
-            <div className="text-lg text-amber-300 font-semibold mt-1">200 kWh PACK</div>
-            <div className="text-xs text-white/65 mt-1">BOLSTER GRIP: MICROSUEDE</div>
-            <div className="text-[11px] text-white/50 mt-2">SEAT SHELL: FIXED MASS</div>
-          </div>
-        </div>
-
-        {/* Interactive Yoke Steering Slider */}
-        <div className="max-w-xl mx-auto text-center">
-          <label className="font-mono text-xs text-white/75 block mb-2">
-            TEST STEER-BY-WIRE YOKE ROTATION ({yokeAngleDeg}°)
-          </label>
-          <input
-            type="range"
-            min={-90}
-            max={90}
-            value={yokeAngleDeg}
-            onChange={(e) => setYokeAngleDeg(Number(e.target.value))}
-            className="w-full accent-[#E82127] cursor-pointer"
-          />
-          <p className="text-xs text-white/60 font-light mt-3">
-            Our iconic Ultrawhite interior is accented with gray microsuede detailing and high-grip bolsters, while a center touchscreen flanked by two forward displays keeps critical flight and track telemetry in your line of sight.
+        <div className="lg:col-span-5">
+          <p className="text-xs sm:text-sm text-white/65 font-light leading-relaxed max-w-xs lg:ml-auto">
+            Fixed carbon seat shells reduce mass while the steer-by-wire yoke, pedal box, and triple-display instrument horizon adapt to you.
           </p>
         </div>
       </div>
+
+      {/* Full-Bleed Real Cockpit Photograph with Interactive Hotspot Pins */}
+      <figure
+        ref={figureRef}
+        data-cursor-label="INSPECT COCKPIT"
+        className="relative aspect-[16/9] w-full rounded-2xl overflow-hidden bg-[#0C0D11] border border-white/15"
+      >
+        <img
+          src={ROADSTER_REAL_PHOTOS.supersonicCockpit}
+          onError={(e) => {
+            e.currentTarget.src = ROADSTER_REAL_PHOTOS.officialRearHero;
+          }}
+          alt="2026 Tesla Roadster Supersonic Cockpit Photograph"
+          className="w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#060608]/90 via-transparent to-[#060608]/40" />
+
+        {/* Interactive Hotspot Nodes on the Real Cockpit Photo */}
+        {COCKPIT_HOTSPOTS.map((spot) => {
+          const isSelected = activeSpot.id === spot.id;
+          return (
+            <button
+              key={spot.id}
+              onClick={() => setActiveSpot(spot)}
+              style={{ left: spot.x, top: spot.y }}
+              className="absolute -translate-x-1/2 -translate-y-1/2 z-20 group focus:outline-none"
+              aria-label={spot.title}
+            >
+              <span
+                className={`flex items-center justify-center w-8 h-8 rounded-full font-mono text-[10px] transition-all duration-300 ${
+                  isSelected
+                    ? 'bg-[#D4AF37] text-black scale-125 shadow-lg'
+                    : 'liquid-glass text-white hover:scale-110'
+                }`}
+              >
+                +
+              </span>
+            </button>
+          );
+        })}
+
+        {/* Whisper-Quiet Corner Callout for Active Hotspot */}
+        <div className="absolute bottom-6 left-6 right-6 sm:bottom-10 sm:left-10 sm:right-10 z-20 flex flex-col md:flex-row md:items-end justify-between gap-6 pointer-events-none">
+          <div className="gold-visor-glass rounded-2xl p-5 sm:p-6 max-w-md pointer-events-auto">
+            <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-[#D4AF37] block mb-1.5">
+              {activeSpot.code}
+            </span>
+            <h3 className="text-xl sm:text-2xl font-light text-white">
+              {activeSpot.title}
+            </h3>
+            <p className="text-xs text-white/70 font-light leading-relaxed mt-2">
+              {activeSpot.detail}
+            </p>
+          </div>
+
+          <div className="flex flex-wrap gap-2 pointer-events-auto">
+            {COCKPIT_HOTSPOTS.map((spot) => (
+              <button
+                key={spot.id}
+                onClick={() => setActiveSpot(spot)}
+                className={`font-mono text-[10px] uppercase tracking-[0.16em] px-3.5 py-2 rounded-full transition-all ${
+                  activeSpot.id === spot.id
+                    ? 'bg-[#F5F5F7] text-[#060608] font-semibold'
+                    : 'liquid-glass text-white/70 hover:text-white'
+                }`}
+              >
+                {spot.code.split('//')[0]}
+              </button>
+            ))}
+          </div>
+        </div>
+      </figure>
     </section>
   );
 };
-

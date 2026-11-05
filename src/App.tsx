@@ -1,85 +1,99 @@
-import React, { useState, useEffect } from 'react';
-import { AeroDriveMode, RoadsterEditionId } from './types/roadster';
-import { EXTERIOR_COLORS, INTERIOR_TRIMS } from './data/roadsterSpecs';
-import { NavbarHud } from './components/NavbarHud';
-import { HeroSection } from './components/HeroSection';
-import { SuctionAeroSection } from './components/SuctionAeroSection';
-import { ColdGasThrusterSection } from './components/ColdGasThrusterSection';
-import { EditionsBentoSection } from './components/EditionsBentoSection';
-import { MaterialityGoldGlazeSection } from './components/MaterialityGoldGlazeSection';
+import React, { useEffect, useState } from 'react';
+import Lenis from 'lenis';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { Preloader } from './components/Preloader';
+import { CustomCursor } from './components/CustomCursor';
+import { NavbarMinimal } from './components/NavbarMinimal';
+import { HeroPinnedStage } from './components/HeroPinnedStage';
+import { PinnedApertureBreakdown } from './components/PinnedApertureBreakdown';
+import { HorizontalHardwareTrack } from './components/HorizontalHardwareTrack';
+import { AirborneSequenceSection } from './components/AirborneSequenceSection';
+import { StickyEditionsStack } from './components/StickyEditionsStack';
 import { SupersonicCockpitSection } from './components/SupersonicCockpitSection';
-import { RoadsterConfigurator } from './components/RoadsterConfigurator';
-import { ReservationModal } from './components/ReservationModal';
-import { Footer } from './components/Footer';
+import { ReserveDrawerModal } from './components/ReserveDrawerModal';
+import { FooterParallax } from './components/FooterParallax';
+
+gsap.registerPlugin(ScrollTrigger);
 
 export function App() {
-  const [activeMode, setActiveMode] = useState<AeroDriveMode>('spacex-thruster');
-  const [selectedEdition, setSelectedEdition] = useState<RoadsterEditionId>('race-ready');
-  const [selectedColorId, setSelectedColorId] = useState<string>(EXTERIOR_COLORS[0].id);
-  const [selectedTrimId, setSelectedTrimId] = useState<string>(INTERIOR_TRIMS[0].id);
-  const [scrollProgress, setScrollProgress] = useState<number>(0);
-  const [isReserveOpen, setIsReserveOpen] = useState<boolean>(false);
+  const [preloaderDone, setPreloaderDone] = useState(false);
+  const [reserveModalOpen, setReserveModalOpen] = useState(false);
+  const [selectedVariant, setSelectedVariant] = useState('Roadster Thrust');
 
   useEffect(() => {
-    const handleScroll = () => {
-      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-      if (maxScroll > 0) {
-        setScrollProgress(Math.min(1, Math.max(0, window.scrollY / maxScroll)));
-      }
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduceMotion) return;
+
+    const lenis = new Lenis({
+      lerp: 0.075,
+      smoothWheel: true,
+      wheelMultiplier: 0.9,
+    });
+
+    lenis.on('scroll', ScrollTrigger.update);
+
+    const updateTicker = (time: number) => {
+      lenis.raf(time * 1000);
     };
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+
+    gsap.ticker.add(updateTicker);
+    gsap.ticker.lagSmoothing(0);
+
+    const onLoad = () => ScrollTrigger.refresh();
+    window.addEventListener('load', onLoad);
+
+    return () => {
+      window.removeEventListener('load', onLoad);
+      gsap.ticker.remove(updateTicker);
+      lenis.destroy();
+    };
   }, []);
 
-  const activeColor =
-    EXTERIOR_COLORS.find((c) => c.id === selectedColorId) || EXTERIOR_COLORS[0];
+  useEffect(() => {
+    if (preloaderDone) {
+      setTimeout(() => ScrollTrigger.refresh(), 100);
+    }
+  }, [preloaderDone]);
 
   return (
-    <div className="min-h-screen bg-[#050508] text-white selection:bg-[#E82127]/40 selection:text-white">
-      <NavbarHud
-        activeMode={activeMode}
-        onSelectMode={setActiveMode}
-        scrollProgress={scrollProgress}
-        onOpenReserve={() => setIsReserveOpen(true)}
-      />
+    <div className="min-h-screen bg-[#060608] text-[#F5F5F7] film-grain">
+      {!preloaderDone && <Preloader onComplete={() => setPreloaderDone(true)} />}
+      <CustomCursor />
+      <NavbarMinimal onOpenReserve={() => setReserveModalOpen(true)} />
+
       <main>
-        <HeroSection
-          activeMode={activeMode}
-          onSelectMode={setActiveMode}
-          primaryColorHex={activeColor.primaryHex}
-          onOpenReserve={() => setIsReserveOpen(true)}
-        />
-        <SuctionAeroSection primaryColorHex={activeColor.primaryHex} />
-        <ColdGasThrusterSection />
-        <EditionsBentoSection
-          selectedEdition={selectedEdition}
-          onSelectEdition={(ed) => {
-            setSelectedEdition(ed);
-            if (ed === 'air-ready') setActiveMode('air-hover');
-            else if (ed === 'race-ready') setActiveMode('spacex-thruster');
-            else setActiveMode('track-suction');
+        {/* 01: Pinned Split-Frame Hero & Scroll-Scrubbed 3D Video Unveil */}
+        <HeroPinnedStage onOpenReserve={() => setReserveModalOpen(true)} />
+
+        {/* 02: Pinned Expanding Clip-Path Window & 3-Chapter Photographic Crossfade */}
+        <PinnedApertureBreakdown />
+
+        {/* 03: Pinned 500vw Horizontal Hardware Inspection Track (6 Real Photo Plates) */}
+        <HorizontalHardwareTrack />
+
+        {/* 04: "Feat of Strength: Complete" 4-Stage Airborne & Wall-Adhesion Sequence */}
+        <AirborneSequenceSection />
+
+        {/* 05: Sticky Receding 3D Card Stack (Performance, Thrust 0.85s, Rocket 0.59s) */}
+        <StickyEditionsStack
+          onSelectVariantAndReserve={(variantName) => {
+            setSelectedVariant(variantName);
+            setReserveModalOpen(true);
           }}
-          onOpenReserve={() => setIsReserveOpen(true)}
         />
-        <MaterialityGoldGlazeSection />
+
+        {/* 06: Supersonic Cockpit Photograph with Clip-Path Unveil & Interactive Hotspots */}
         <SupersonicCockpitSection />
-        <RoadsterConfigurator
-          selectedEdition={selectedEdition}
-          onSelectEdition={setSelectedEdition}
-          selectedColorId={selectedColorId}
-          onSelectColorId={setSelectedColorId}
-          selectedTrimId={selectedTrimId}
-          onSelectTrimId={setSelectedTrimId}
-          onOpenReserve={() => setIsReserveOpen(true)}
-        />
       </main>
-      <Footer />
-      <ReservationModal
-        isOpen={isReserveOpen}
-        onClose={() => setIsReserveOpen(false)}
-        selectedEdition={selectedEdition}
-        selectedColorId={selectedColorId}
-        selectedTrimId={selectedTrimId}
+
+      {/* 07: Finale Full-Bleed Footer */}
+      <FooterParallax onOpenReserve={() => setReserveModalOpen(true)} />
+
+      <ReserveDrawerModal
+        isOpen={reserveModalOpen}
+        initialVariant={selectedVariant}
+        onClose={() => setReserveModalOpen(false)}
       />
     </div>
   );

@@ -3,12 +3,12 @@
 @tailwind utilities;
 
 :root {
-  --bg-void: #050508;
-  --bg-titanium: #0B0D13;
-  --tesla-crimson: #E82127;
+  --bg-void: #060608;
+  --bg-surface: #0C0D11;
+  --ano-white: #F5F5F7;
   --visor-gold: #D4AF37;
-  --thruster-cyan: #38BDF8;
-  --font-light: 'Helvetica Neue Light', 'Helvetica Neue', 'Inter', sans-serif;
+  --tesla-red: #E82127;
+  --font-sans: 'Helvetica Neue Light', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-display: 'HelveticaNowDisplay-Medium', 'Inter', sans-serif;
   --font-serif: 'Instrument Serif', Georgia, serif;
   --font-mono: 'JetBrains Mono', monospace;
@@ -20,40 +20,52 @@
   box-sizing: border-box;
 }
 
+/* CRITICAL FOR LENIS: html scroll-behavior MUST be auto, never smooth */
 html {
-  scroll-behavior: smooth;
-  background-color: #050508;
-  color: #ffffff;
+  scroll-behavior: auto !important;
+  background-color: #060608;
+  color: #F5F5F7;
+}
+
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
 }
 
 body {
-  font-family: var(--font-light);
-  background-color: #050508;
-  color: #ffffff;
+  font-family: var(--font-sans);
+  background-color: #060608;
+  color: #F5F5F7;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
 }
 
-::selection {
-  background: rgba(232, 33, 39, 0.45);
-  color: #ffffff;
-}
-
 /* ==========================================================================
-   1. OFFICIAL MOTIONSITES .liquid-glass REFRACTIVE SURFACE SHADER
+   MOTIONSITES .liquid-glass REFRACTIVE SURFACE SHADER
    ========================================================================== */
 .liquid-glass {
   background: linear-gradient(
     165deg,
-    rgba(255, 255, 255, 0.035) 0%,
-    rgba(255, 255, 255, 0.012) 40%,
+    rgba(255, 255, 255, 0.04) 0%,
+    rgba(255, 255, 255, 0.012) 45%,
     rgba(255, 255, 255, 0.004) 100%
   );
-  backdrop-filter: blur(18px) saturate(1.4) brightness(1.05);
-  -webkit-backdrop-filter: blur(18px) saturate(1.4) brightness(1.05);
-  border: none;
-  box-shadow: inset 0 0 12px rgba(255, 255, 255, 0.14);
+  backdrop-filter: blur(20px) saturate(1.4) brightness(1.04);
+  -webkit-backdrop-filter: blur(20px) saturate(1.4) brightness(1.04);
+  box-shadow: inset 0 0 14px rgba(255, 255, 255, 0.12);
   position: relative;
   overflow: hidden;
 }
@@ -63,15 +75,14 @@ body {
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  padding: 1.5px;
+  padding: 1px;
   background: linear-gradient(
     180deg,
-    rgba(255, 255, 255, 0.18) 0%,
-    rgba(255, 255, 255, 0.04) 15%,
-    rgba(255, 255, 255, 0.008) 40%,
-    rgba(255, 255, 255, 0.008) 60%,
-    rgba(255, 255, 255, 0.04) 85%,
-    rgba(255, 255, 255, 0.12) 100%
+    rgba(255, 255, 255, 0.22) 0%,
+    rgba(255, 255, 255, 0.04) 25%,
+    rgba(255, 255, 255, 0.01) 50%,
+    rgba(212, 175, 55, 0.14) 85%,
+    rgba(255, 255, 255, 0.16) 100%
   );
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
@@ -79,48 +90,32 @@ body {
   pointer-events: none;
 }
 
-.liquid-glass::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  background:
-    radial-gradient(ellipse at 50% 0%, rgba(255, 255, 255, 0.045) 0%, transparent 50%),
-    radial-gradient(ellipse at center, transparent 55%, rgba(255, 255, 255, 0.008) 80%, rgba(255, 255, 255, 0.025) 100%);
-  pointer-events: none;
-}
-
-/* ==========================================================================
-   2. GOLD-GLAZED SPACESUIT VISOR GLASS (COPPER-GOLD RADIANCE)
-   ========================================================================== */
-.gold-glazed-glass {
+/* Gold-Glazed Spacesuit Visor Glass Panel */
+.gold-visor-glass {
   background: linear-gradient(
-    165deg,
-    rgba(212, 175, 55, 0.09) 0%,
-    rgba(15, 12, 8, 0.72) 55%,
-    rgba(232, 33, 39, 0.05) 100%
+    160deg,
+    rgba(212, 175, 55, 0.08) 0%,
+    rgba(10, 10, 14, 0.78) 60%,
+    rgba(212, 175, 55, 0.03) 100%
   );
-  backdrop-filter: blur(22px) saturate(1.55) brightness(1.06);
-  -webkit-backdrop-filter: blur(22px) saturate(1.55) brightness(1.06);
-  box-shadow:
-    inset 0 0 18px rgba(212, 175, 55, 0.16),
-    0 24px 60px -12px rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(24px) saturate(1.5);
+  -webkit-backdrop-filter: blur(24px) saturate(1.5);
+  box-shadow: inset 0 0 18px rgba(212, 175, 55, 0.12);
   position: relative;
   overflow: hidden;
 }
 
-.gold-glazed-glass::before {
+.gold-visor-glass::before {
   content: '';
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  padding: 1.5px;
+  padding: 1px;
   background: linear-gradient(
     180deg,
-    rgba(245, 158, 11, 0.38) 0%,
-    rgba(255, 255, 255, 0.06) 35%,
-    rgba(232, 33, 39, 0.18) 80%,
-    rgba(245, 158, 11, 0.28) 100%
+    rgba(212, 175, 55, 0.42) 0%,
+    rgba(255, 255, 255, 0.05) 50%,
+    rgba(212, 175, 55, 0.24) 100%
   );
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
@@ -128,85 +123,43 @@ body {
   pointer-events: none;
 }
 
-/* ==========================================================================
-   3. CURSOR-TRACKING RADIAL SPOTLIGHT CARD
-   ========================================================================== */
-.spotlight-card {
-  position: relative;
-}
-
-.spotlight-card::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  background: radial-gradient(
-    500px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
-    rgba(232, 33, 39, 0.16),
-    rgba(212, 175, 55, 0.08) 35%,
-    transparent 60%
-  );
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  pointer-events: none;
-  z-index: 2;
-}
-
-.spotlight-card:hover::before {
-  opacity: 1;
-}
-
-/* ==========================================================================
-   4. GOLD-GLAZED & AFTERBURNER KINETIC SERIF ACCENTS
-   ========================================================================== */
-@keyframes shimmer-Sweep {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-
-.gold-glazed-serif {
+/* Editorial Italic Serif Display Word */
+.serif-gold-italic {
   font-family: var(--font-serif);
   font-style: italic;
-  background: linear-gradient(90deg, #ffffff 0%, #fde68a 28%, #f59e0b 52%, #ef4444 76%, #ffffff 100%);
-  background-size: 200% auto;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  animation: shimmer-Sweep 6s ease infinite;
+  font-weight: 400;
+  color: #F3E5AB;
 }
 
-@keyframes blink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0; }
+/* Masked Word & Line Reveal Wrappers */
+.split-word-mask,
+.split-line-mask {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+  padding-bottom: 0.06em;
 }
 
-.animate-cursor-blink {
-  animation: blink 1s step-end infinite;
+.split-word,
+.split-line {
+  display: inline-block;
+  will-change: transform, opacity, filter;
 }
 
-/* Subtle aerospace grid background overlay */
-.aerospace-grid {
-  background-size: 48px 48px;
-  background-image:
-    linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+/* Subtle Film Grain Overlay */
+.film-grain {
+  background-image: radial-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 0);
+  background-size: 24px 24px;
 }
 
-/* Custom sleek scrollbars */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 4px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #050508;
+  background: #060608;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.18);
-  border-radius: 9999px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(232, 33, 39, 0.65);
+  background: rgba(212, 175, 55, 0.35);
 }
