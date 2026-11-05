@@ -1,188 +1,157 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { ROADSTER_REAL_PHOTOS } from '../data/roadsterAssets';
+import React, { useRef, useState } from 'react';
+import { ROADSTER_PHOTOS } from '../data/roadsterWorldData';
 
-gsap.registerPlugin(ScrollTrigger);
+interface LoupeHotspot {
+  id: string;
+  xPercent: number;
+  yPercent: number;
+  title: string;
+  metric: string;
+  detail: string;
+}
 
-const XRAY_ZONES = [
+const HOTSPOTS: LoupeHotspot[] = [
   {
-    id: 'front-aero',
-    xPct: 24,
-    yPct: 54,
-    code: 'X-RAY ZONE 01 // FRONT AERO & BY-WIRE',
-    title: 'Swivelling Fan Exhaust & Inboard Spool-Valve Rockers',
-    metric: '2,825 MM WHEELBASE',
-    xrayImg: ROADSTER_REAL_PHOTOS.officialSuspension,
+    id: 'front-fan-exhaust',
+    xPercent: 24,
+    yPercent: 52,
+    title: 'Swivelling Front Fan Exhaust Vane',
+    metric: '1.1G Static Suction',
+    detail: 'Routes high-velocity air evacuated from the underbody plenum over the front hood.',
   },
   {
-    id: 'cabin-copv',
-    xPct: 52,
-    yPct: 48,
-    code: 'X-RAY ZONE 02 // 600L COMPOSITE PRESSURE VESSELS',
-    title: '400L Cabin Auxiliary Tank + 200L Rear Nitrogen COPV',
-    metric: '600L N₂ CAPACITY',
-    xrayImg: ROADSTER_REAL_PHOTOS.coldGasCopvHardware,
+    id: 'aux-copv-tank',
+    xPercent: 52,
+    yPercent: 44,
+    title: '400L Cabin Auxiliary Nitrogen COPV',
+    metric: '10,000 PSI Carbon Vessel',
+    detail: 'Replaces the passenger seat in the Rocket variant to triple cold-gas flight endurance.',
   },
   {
-    id: 'rear-nozzles',
-    xPct: 78,
-    yPct: 52,
-    code: 'X-RAY ZONE 03 // COLD-GAS NOZZLES + SUCTION FANS',
-    title: 'Four Rear De Laval Nozzles Above Twin Underbody Suction Fans',
-    metric: '0.59S / 90.9 KN',
-    xrayImg: ROADSTER_REAL_PHOTOS.nozzlesAndSuctionFans,
+    id: 'rear-thruster-nozzles',
+    xPercent: 81,
+    yPercent: 56,
+    title: 'Quad Rear Cold-Gas Thruster Nozzles',
+    metric: '0.59s 0-60 MPH Launch',
+    detail: 'Concealed behind the rear license plate flip-door and governed by an Optimus actuator valve.',
   },
 ];
 
 export const XRayHardwareLoupe: React.FC = () => {
-  const sectionRef = useRef<HTMLElement | null>(null);
-  const xrayLayerRef = useRef<HTMLDivElement | null>(null);
-  const reticleRef = useRef<HTMLDivElement | null>(null);
-  const [activeZoneIdx, setActiveZoneIdx] = useState(1);
-  const isPointerActiveRef = useRef(false);
+  const stageRef = useRef<HTMLDivElement>(null);
+  const xrayLayerRef = useRef<HTMLDivElement>(null);
+  const ringRef = useRef<HTMLDivElement>(null);
+  const [activeHotspot, setActiveHotspot] = useState<LoupeHotspot>(HOTSPOTS[1]);
 
-  useEffect(() => {
-    const section = sectionRef.current;
-    const xrayLayer = xrayLayerRef.current;
-    const reticle = reticleRef.current;
-    if (!section || !xrayLayer || !reticle) return;
+  const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    const stage = stageRef.current;
+    const xray = xrayLayerRef.current;
+    const ring = ringRef.current;
+    if (!stage || !xray || !ring) return;
 
-    const setLensPosition = (xPct: number, yPct: number) => {
-      xrayLayer.style.clipPath = `circle(175px at ${xPct}% ${yPct}%)`;
-      reticle.style.left = `${xPct}%`;
-      reticle.style.top = `${yPct}%`;
-      if (xPct < 38) setActiveZoneIdx(0);
-      else if (xPct < 66) setActiveZoneIdx(1);
-      else setActiveZoneIdx(2);
-    };
+    const rect = stage.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
 
-    setLensPosition(52, 48);
-
-    const onPointerMove = (e: PointerEvent) => {
-      isPointerActiveRef.current = true;
-      const rect = section.getBoundingClientRect();
-      const xPct = Math.max(8, Math.min(92, ((e.clientX - rect.left) / rect.width) * 100));
-      const yPct = Math.max(15, Math.min(85, ((e.clientY - rect.top) / rect.height) * 100));
-      setLensPosition(xPct, yPct);
-    };
-
-    const onPointerLeave = () => {
-      isPointerActiveRef.current = false;
-    };
-
-    section.addEventListener('pointermove', onPointerMove, { passive: true });
-    section.addEventListener('pointerleave', onPointerLeave);
-
-    const ctx = gsap.context(() => {
-      ScrollTrigger.create({
-        trigger: section,
-        start: 'top top',
-        end: '+=190%',
-        pin: true,
-        anticipatePin: 1,
-        scrub: 0.5,
-        onUpdate: (self) => {
-          if (!isPointerActiveRef.current) {
-            const sweepX = 20 + self.progress * 64;
-            const sweepY = 50 + Math.sin(self.progress * Math.PI * 2) * 6;
-            setLensPosition(sweepX, sweepY);
-          }
-        },
-      });
-    }, section);
-
-    return () => {
-      section.removeEventListener('pointermove', onPointerMove);
-      section.removeEventListener('pointerleave', onPointerLeave);
-      ctx.revert();
-    };
-  }, []);
-
-  const currentZone = XRAY_ZONES[activeZoneIdx] || XRAY_ZONES[1];
+    xray.style.clipPath = `circle(150px at ${x}px ${y}px)`;
+    ring.style.transform = `translate3d(${x - 150}px, ${y - 150}px, 0)`;
+  };
 
   return (
     <section
-      id="xray-loupe"
-      ref={sectionRef}
-      data-cursor-label="X-RAY SCAN"
-      className="relative h-screen w-full overflow-hidden bg-[#050507] select-none"
+      id="xray-inspection"
+      className="relative z-20 w-full bg-[#09090B] py-24 px-5 md:px-12 border-t border-white/10"
     >
-      {/* BASE LAYER: Real 2026 Tesla Roadster Exterior Photograph */}
-      <div className="absolute inset-0 z-0 gpu-layer">
-        <img
-          src={ROADSTER_REAL_PHOTOS.exteriorProfileAnoWhite}
-          onError={(e) => {
-            e.currentTarget.src = ROADSTER_REAL_PHOTOS.officialRearHero;
-          }}
-          alt="2026 Tesla Roadster Exterior Skin"
-          className="w-full h-full object-cover opacity-75"
-        />
-        <div
-          className="absolute inset-0"
-          style={{
-            background:
-              'linear-gradient(to top, #050507 0%, rgba(5,5,7,0.2) 50%, #050507 100%)',
-          }}
-        />
-      </div>
-
-      {/* X-RAY LAYER: Exposed Internal Cold-Gas & Suction Hardware Clipped to Loupe Circle */}
-      <div
-        ref={xrayLayerRef}
-        style={{ clipPath: 'circle(175px at 52% 48%)' }}
-        className="absolute inset-0 z-10 pointer-events-none gpu-layer"
-      >
-        <img
-          src={currentZone.xrayImg}
-          onError={(e) => {
-            e.currentTarget.src = ROADSTER_REAL_PHOTOS.nozzlesAndSuctionFans;
-          }}
-          alt="2026 Tesla Roadster Internal X-Ray Hardware"
-          className="w-full h-full object-cover scale-105 contrast-125 brightness-110"
-        />
-        <div className="absolute inset-0 bg-[#D4AF37]/10 mix-blend-overlay" />
-      </div>
-
-      {/* Circular Aerospace Reticle Ring Tracking the X-Ray Aperture */}
-      <div
-        ref={reticleRef}
-        style={{ left: '52%', top: '48%', width: '350px', height: '350px' }}
-        className="absolute -translate-x-1/2 -translate-y-1/2 z-20 rounded-full border border-[#D4AF37]/70 pointer-events-none flex items-start justify-center pt-3 gpu-layer"
-      >
-        <span className="font-mono text-[9px] uppercase tracking-[0.22em] bg-[#050507]/85 text-[#D4AF37] px-2.5 py-0.5 rounded-full border border-[#D4AF37]/40">
-          SUB-SURFACE OPTICAL X-RAY
-        </span>
-      </div>
-
-      {/* Perimeter Editorial Telemetry HUD */}
-      <div className="relative z-30 h-full w-full max-w-[1600px] mx-auto p-6 sm:p-12 flex flex-col justify-between pointer-events-none">
-        <div className="pt-16 flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.22em] text-white/60">
-          <span>03 // SUB-SURFACE HARDWARE X-RAY SCANNER</span>
-          <span className="text-[#D4AF37]">MOVE CURSOR OR SCROLL TO SCAN CHASSIS ↔</span>
+      <div className="max-w-[1440px] mx-auto space-y-10">
+        <div className="max-w-2xl space-y-3">
+          <p className="text-xs font-mono-tech uppercase tracking-[0.2em] text-[#D4AF37]">
+            OPTICAL SUB-SURFACE INSPECTION
+          </p>
+          <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight text-[#F4F4F6]">
+            Glide across the bodywork to{' '}
+            <span className="font-light text-[#D4AF37]">
+              X-ray the Supersonic Cockpit.
+            </span>
+          </h2>
+          <p className="text-sm md:text-base text-[#D4D4D8]">
+            Move your pointer or drag across the frame to peer through the Ano White exterior directly into the fixed carbon monocoque and SpaceX cold-gas architecture.
+          </p>
         </div>
 
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-4">
-          <div>
-            <span className="font-mono text-[10px] uppercase tracking-[0.24em] text-[#D4AF37] block mb-2">
-              {currentZone.code}
-            </span>
-            <h2 className="text-4xl sm:text-6xl font-light tracking-tight text-white leading-[0.96] max-w-2xl">
-              {currentZone.title}
-            </h2>
+        {/* Interactive Dual-Layer X-Ray Frame */}
+        <div
+          ref={stageRef}
+          onPointerMove={handlePointerMove}
+          className="relative w-full h-[420px] sm:h-[540px] lg:h-[620px] rounded-2xl overflow-hidden border border-white/15 cursor-crosshair select-none touch-none"
+        >
+          {/* Base Layer: Exterior Track Profile */}
+          <img
+            src={ROADSTER_PHOTOS.trackCorneringFront}
+            alt="2026 Tesla Roadster Exterior"
+            className="w-full h-full object-cover object-center"
+          />
+
+          {/* X-Ray Clipped Layer: Internal Supersonic Cockpit & Carbon Monocoque */}
+          <div
+            ref={xrayLayerRef}
+            style={{ clipPath: 'circle(150px at 50% 50%)' }}
+            className="absolute inset-0 pointer-events-none"
+          >
+            <img
+              src={ROADSTER_PHOTOS.supersonicCockpit}
+              alt="2026 Tesla Roadster Internal Cockpit X-Ray"
+              className="w-full h-full object-cover object-center contrast-125 brightness-110"
+            />
+            <div className="absolute inset-0 bg-[#D4AF37]/10 mix-blend-overlay" />
           </div>
 
-          <div className="gold-visor-glass rounded-2xl px-5 py-4 font-mono pointer-events-auto">
-            <span className="text-[9px] text-white/50 block tracking-widest">
-              ACTIVE TELEMETRY READOUT
+          {/* GPU-Accelerated Loupe Ring */}
+          <div
+            ref={ringRef}
+            style={{
+              transform: 'translate3d(calc(50% - 150px), calc(50% - 150px), 0)',
+            }}
+            className="gpu-layer absolute top-0 left-0 w-[300px] h-[300px] rounded-full border border-[#D4AF37]/80 shadow-[0_0_40px_rgba(212,175,55,0.25)] pointer-events-none flex items-end justify-center pb-3"
+          >
+            <span className="px-2.5 py-0.5 rounded-full bg-[#09090B]/85 text-[10px] font-mono-tech uppercase tracking-[0.14em] text-[#D4AF37]">
+              SUB-SURFACE X-RAY
             </span>
-            <span className="text-xl sm:text-2xl text-[#D4AF37] font-normal mt-0.5 block">
-              {currentZone.metric}
-            </span>
+          </div>
+
+          {/* Interactive Engineering Hotspots */}
+          {HOTSPOTS.map((spot) => {
+            const isSelected = activeHotspot.id === spot.id;
+            return (
+              <button
+                key={spot.id}
+                type="button"
+                onClick={() => setActiveHotspot(spot)}
+                style={{ left: `${spot.xPercent}%`, top: `${spot.yPercent}%` }}
+                className={`absolute -translate-x-1/2 -translate-y-1/2 px-3 py-1.5 rounded-full text-xs font-mono-tech transition-all ${
+                  isSelected
+                    ? 'bg-[#D4AF37] text-[#09090B] font-semibold scale-105'
+                    : 'liquid-glass text-[#F4F4F6] hover:border-[#D4AF37]'
+                }`}
+              >
+                {spot.metric}
+              </button>
+            );
+          })}
+
+          {/* Bottom-Left Active Hotspot Readout in Liquid Glass */}
+          <div className="liquid-glass absolute bottom-5 left-5 right-5 sm:right-auto sm:max-w-md rounded-2xl p-5 space-y-1.5">
+            <p className="text-xs font-mono-tech uppercase tracking-[0.16em] text-[#D4AF37]">
+              {activeHotspot.metric}
+            </p>
+            <h3 className="font-display text-lg font-semibold text-[#F4F4F6]">
+              {activeHotspot.title}
+            </h3>
+            <p className="text-xs sm:text-sm text-[#D4D4D8] leading-relaxed">
+              {activeHotspot.detail}
+            </p>
           </div>
         </div>
       </div>
     </section>
   );
 };
-
